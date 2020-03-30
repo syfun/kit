@@ -812,7 +812,7 @@ func (g *generateGRPCTransportProto) generateRequestResponse() {
 				if r.Name == v.Name+"Request" {
 					foundRequest = true
 				}
-				if r.Name == v.Name+"Reply" {
+				if r.Name == v.Name+"Response" {
 					foundReply = true
 				}
 			}
@@ -824,7 +824,7 @@ func (g *generateGRPCTransportProto) generateRequestResponse() {
 		}
 		if !foundReply {
 			g.protoSrc.Elements = append(g.protoSrc.Elements, &proto.Message{
-				Name: v.Name + "Reply",
+				Name: v.Name + "Response",
 			})
 		}
 	}
@@ -845,7 +845,7 @@ func (g *generateGRPCTransportProto) getServiceRPC(svc *proto.Service) {
 		svc.Elements = append(svc.Elements,
 			&proto.RPC{
 				Name:        v.Name,
-				ReturnsType: v.Name + "Reply",
+				ReturnsType: v.Name + "Response",
 				RequestType: v.Name + "Request",
 			},
 		)
@@ -1092,7 +1092,7 @@ func (g *generateGRPCTransport) Generate() (err error) {
 		if !encoderFound {
 			g.code.appendMultilineComment([]string{
 				fmt.Sprintf("encode%sResponse is a transport/grpc.EncodeResponseFunc that converts", m.Name),
-				"a user-domain response to a gRPC reply.",
+				"a user-domain response to a gRPC response.",
 				"TODO implement the encoder",
 			})
 			g.code.NewLine()
@@ -1127,7 +1127,7 @@ func (g *generateGRPCTransport) Generate() (err error) {
 					jen.Id("req").Id("*").Qual(pbImport, n+"Request"),
 				},
 				[]jen.Code{
-					jen.Id("*").Qual(pbImport, n+"Reply"),
+					jen.Id("*").Qual(pbImport, n+"Response"),
 					jen.Error(),
 				},
 				"",
@@ -1144,7 +1144,7 @@ func (g *generateGRPCTransport) Generate() (err error) {
 				),
 				jen.Return(
 					jen.Id("rep").Dot("").Call(
-						jen.Id("*").Qual(pbImport, n+"Reply"),
+						jen.Id("*").Qual(pbImport, n+"Response"),
 					),
 					jen.Nil(),
 				),

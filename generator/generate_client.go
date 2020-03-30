@@ -399,7 +399,7 @@ func (g *generateGRPCClient) Generate() (err error) {
 					jen.Lit(m.Name),
 					jen.Id(fmt.Sprintf("encode%sRequest", m.Name)),
 					jen.Id(fmt.Sprintf("decode%sResponse", m.Name)),
-					jen.Qual(pbImport, m.Name+"Reply").Block(),
+					jen.Qual(pbImport, m.Name+"Response").Block(),
 					jen.Id(fmt.Sprintf("options[\"%s\"]...", m.Name)),
 				).Dot("Endpoint").Call(),
 			).Line(),
